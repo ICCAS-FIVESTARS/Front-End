@@ -6,6 +6,7 @@ import { UserProvider } from './utils/user';
 
 import LoginPage from './component/login/base';
 import HomePage from './component/home/base';
+import HomePage1 from './component/home/base1';
 import JoinPage from './component/join/base';
 import DrawingPage from './component/drawing/base';
 import TutorialPage from './component/tutorial/base';
@@ -29,7 +30,7 @@ export default function Router() {
                     />
                     <Stack.Screen
                         name="Home"
-                        component={HomePage}
+                        component={HomePage1}
                         options={{
                             title: 'Home',
                             headerBackVisible: false,
