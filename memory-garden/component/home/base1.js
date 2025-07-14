@@ -22,6 +22,21 @@ const backgroundImg = require('../../assets/home/backgroundImg.png');
 const grayLight = require('../../assets/home/grayLight.png');
 const yelloLight = require('../../assets/home/yelloLight.png');
 
+const characterGifs = [
+  require('../../assets/character/stage1.gif'),
+  require('../../assets/character/stage2.gif'),
+  require('../../assets/character/stage3.gif'),
+  require('../../assets/character/stage4.gif'),
+  require('../../assets/character/stage5.gif'),
+  require('../../assets/character/stage6.gif'),
+  require('../../assets/character/stage7.gif'),
+  require('../../assets/character/stage8.gif'),
+  require('../../assets/character/stage9.gif'),
+  require('../../assets/character/stage10.gif'),
+  require('../../assets/character/stage11.gif'),
+  require('../../assets/character/stage12.gif'),
+];
+
 const { width, height } = Dimensions.get('window');
 
 export default function HomePage({ navigation }) {
@@ -65,7 +80,7 @@ export default function HomePage({ navigation }) {
       ])
     );
     blinkAnimation.start();
-    
+
     return () => {
       blinkAnimation.stop();
       blinkAnimation.reset();
@@ -79,7 +94,7 @@ export default function HomePage({ navigation }) {
     }
   }, [userInfo.stage]);
 
-  
+
 
   // 캐릭터 위치 (아치형 길 위)
   const getCharacterPosition = () => {
@@ -87,7 +102,7 @@ export default function HomePage({ navigation }) {
     const centerY = height / 2;
     return {
       x: centerX - 40,
-      y: centerY + 80
+      y: centerY + 0
     };
   };
 
@@ -169,8 +184,8 @@ export default function HomePage({ navigation }) {
   const characterPos = getCharacterPosition();
 
   return (
-    <ImageBackground 
-      source={backgroundImg} 
+    <ImageBackground
+      source={backgroundImg}
       style={styles.backgroundImage}
       resizeMode="cover"
     >
@@ -181,16 +196,16 @@ export default function HomePage({ navigation }) {
             <Text style={styles.lifeText}>❤️</Text>
             <Text style={styles.lifeCount}>3</Text>
           </View>
-          
+
           <View style={styles.topButtonGroup}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.circleButton}
               onPress={() => setUserModalVisible(true)}
             >
               <Text style={styles.buttonText}>👤</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={styles.circleButton}
               onPress={() => setCollectionModalVisible(true)}
             >
@@ -221,7 +236,7 @@ export default function HomePage({ navigation }) {
             const status = getStageStatus(index);
             const lightImage = getLightImage(index);
             const isCurrentStage = status === 'current';
-            
+
             return (
               <View
                 key={index}
@@ -244,8 +259,8 @@ export default function HomePage({ navigation }) {
                       }
                     ]}
                   >
-                    <Image 
-                      source={lightImage} 
+                    <Image
+                      source={lightImage}
                       style={[
                         styles.lightImage,
                         // 현재 스테이지 추가 스타일
@@ -253,7 +268,7 @@ export default function HomePage({ navigation }) {
                       ]}
                       resizeMode="contain"
                     />
-                    <Text 
+                    <Text
                       style={[
                         styles.stageNumber,
                         // 현재 스테이지 숫자 스타일
@@ -269,7 +284,7 @@ export default function HomePage({ navigation }) {
           })}
 
           {/* 캐릭터 영역 */}
-          <View 
+          <View
             style={[
               styles.characterContainer,
               {
@@ -280,7 +295,12 @@ export default function HomePage({ navigation }) {
             ]}
           >
             <View style={styles.characterBox}>
-              <Text style={styles.characterText}>캐릭터</Text>
+              {/* <Text style={styles.characterText}>캐릭터</Text> */}
+              <Image
+                source={characterGifs[userInfo.stage]}
+                style={[styles.characterImage]}
+                resizeMode="contain"
+              />
             </View>
 
             {/* 포션 버튼 - 캐릭터 근처에 배치 */}
@@ -445,7 +465,7 @@ const styles = StyleSheet.create({
     color: '#8B008B',
   },
   potionButtonPosition: {
-    top: 90,
+    top: 120,
     left: 0,
   },
   logoutButton: {
