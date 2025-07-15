@@ -5,25 +5,58 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
+  Image
 } from 'react-native';
 
 export default function CollectionModal({ visible, onClose, hiddenItemList }) {
   const renderHiddenItem = (hasItem, index) => {
+    // 인덱스에 따른 고정 GIF 매핑
+    const getGifByIndex = (index) => {
+      const gifMap = {
+        0: require('../../assets/hidden/random1.gif'),
+        1: require('../../assets/hidden/random2.gif'),
+        2: require('../../assets/hidden/random3.gif'),
+        3: require('../../assets/hidden/random4.gif'),
+        4: require('../../assets/hidden/random5.gif'),
+        5: require('../../assets/hidden/random6.gif'),
+      };
+      return gifMap[index] || require('../../assets/hidden/random1.gif');
+    };
+
+    // return (
+    //   <View
+    //     key={index}
+    //     style={[
+    //       styles.itemBox,
+    //       hasItem ? styles.hasItem : styles.noItem
+    //     ]}
+    //   >
+    //     {hasItem ? (
+    //       <Text style={styles.itemText}>🎁</Text>
+    //     ) : (
+    //       <Text style={styles.emptyText}>?</Text>
+    //     )}
+    //   </View>
+    // );
     return (
-      <View
-        key={index}
-        style={[
-          styles.itemBox,
-          hasItem ? styles.hasItem : styles.noItem
-        ]}
-      >
-        {hasItem ? (
-          <Text style={styles.itemText}>🎁</Text>
-        ) : (
-          <Text style={styles.emptyText}>?</Text>
-        )}
-      </View>
-    );
+    <View
+      key={index}
+      style={[
+        styles.itemBox,
+        hasItem ? styles.hasItem : styles.noItem,
+      ]}
+    >
+      {hasItem ? (
+        <Image
+          source={getGifByIndex(index)}
+          style={styles.gifImage}
+          resizeMode="contain"
+        />
+      ) : (
+        <Text style={styles.emptyText}>?</Text>
+      )}
+    </View>
+  );
   };
 
   const renderRow = (startIndex) => {
@@ -52,12 +85,12 @@ export default function CollectionModal({ visible, onClose, hiddenItemList }) {
           <View style={styles.collectionGrid}>
             {renderRow(0)}
             {renderRow(3)}
-            {renderRow(6)}
+            {/* {renderRow(6)} */}
           </View>
 
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>
-              수집 진행률: {hiddenItemList.filter(item => item === 1).length}/9
+              수집 진행률: {hiddenItemList.filter(item => item === 1).length}/6
             </Text>
           </View>
 
@@ -108,13 +141,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemBox: {
-    width: 70,
-    height: 70,
+    width: 80,
+    height: 80,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 5,
     borderWidth: 2,
+    padding: 5,
   },
   hasItem: {
     backgroundColor: '#FFD700',
@@ -123,6 +157,11 @@ const styles = StyleSheet.create({
   noItem: {
     backgroundColor: '#F0F0F0',
     borderColor: '#D0D0D0',
+  },
+  gifImage: {
+    width: 70,           
+    height: 70,          
+    borderRadius: 8,     
   },
   itemText: {
     fontSize: 24,

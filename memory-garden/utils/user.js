@@ -18,8 +18,8 @@ export const UserProvider = ({ children }) => {
     clearTime: 5,
     potion: 4,
     currentSetPotionUsed: 0,
-    hidden_item_list: [1, 0, 1, 0, 0, 1, 0, 0, 0],
-    isFirstLogin: true // 첫 로그인 체크 변수 추가
+    hidden_item_list: [1, 0, 1, 1, 0, 0,],
+    isFirstLogin: false // 첫 로그인 체크 변수 추가
   });
 
   const updateUserInfo = useCallback((newInfo) => {
