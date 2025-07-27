@@ -37,6 +37,21 @@ const characterGifs = [
   require('../../assets/character/stage12.gif'),
 ];
 
+const potionGifs = [
+  require('../../assets/potion/stage1_potion.gif'),
+  require('../../assets/potion/stage2_potion.gif'),
+  require('../../assets/potion/stage3_potion.gif'),
+  require('../../assets/potion/stage4_potion.gif'),
+  require('../../assets/potion/stage5_potion.gif'),
+  require('../../assets/potion/stage6_potion.gif'),
+  require('../../assets/potion/stage7_potion.gif'),
+  require('../../assets/potion/stage8_potion.gif'),
+  require('../../assets/potion/stage9_potion.gif'),
+  require('../../assets/potion/stage10_potion.gif'),
+  require('../../assets/potion/stage11_potion.gif'),
+  require('../../assets/potion/stage12_potion.gif'),
+];
+
 const { width, height } = Dimensions.get('window');
 
 export default function HomePage({ navigation }) {
@@ -46,6 +61,7 @@ export default function HomePage({ navigation }) {
   const [collectionModalVisible, setCollectionModalVisible] = useState(false);
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [easterEggMessage, setEasterEggMessage] = useState('');
+  const [showPotionGif, setShowPotionGif] = useState(false);
 
   // 12개 전구의 고정 위치 (아치형 배경에 맞게 수동 조정)
   const lightPositions = [
@@ -165,9 +181,15 @@ export default function HomePage({ navigation }) {
   const handlePotionUse = () => {
     const result = usePotion();
     if (result.success) {
+      setShowPotionGif(true);
       const message = getRandomEasterEggMessage();
       setEasterEggMessage(message);
       setEasterEggVisible(true);
+
+      setTimeout(() => {
+        setShowPotionGif(false);
+      }, 2000);
+      
       Alert.alert(
         '포션 사용',
         `포션을 마셨습니다! (남은 포션: ${result.remainingPotion}개)\n현재 세트에서 사용한 포션: ${result.potionUsedInSet}/4개`
@@ -297,7 +319,11 @@ export default function HomePage({ navigation }) {
             <View style={styles.characterBox}>
               {/* <Text style={styles.characterText}>캐릭터</Text> */}
               <Image
-                source={characterGifs[userInfo.stage]}
+                source={
+                  showPotionGif
+                  ? potionGifs[userInfo.stage]
+                  : characterGifs[userInfo.stage]}
+                }
                 style={[styles.characterImage]}
                 resizeMode="contain"
               />
