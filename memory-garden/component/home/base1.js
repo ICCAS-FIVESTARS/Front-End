@@ -322,7 +322,7 @@ export default function HomePage({ navigation }) {
                 source={
                   showPotionGif
                   ? potionGifs[userInfo.stage]
-                  : characterGifs[userInfo.stage]}
+                  : characterGifs[userInfo.stage]
                 }
                 style={[styles.characterImage]}
                 resizeMode="contain"
