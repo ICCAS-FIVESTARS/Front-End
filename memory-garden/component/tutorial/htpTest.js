@@ -14,6 +14,8 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import * as ImagePicker from 'expo-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ViewShot from "react-native-view-shot";
+
 import { getHtpStep, getTotalHtpSteps } from '../../utils/htpSequence';
 
 const { width, height } = Dimensions.get('window');
@@ -21,16 +23,17 @@ const { width, height } = Dimensions.get('window');
 export default function HtpTestPage({ navigation }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [uploadedImage, setUploadedImage] = useState(null);
-  
+
   // 모든 단계의 그림을 저장하는 배열 (이전 그림 유지)
   const [allPaths, setAllPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState('');
-  
+
   const [currentColor, setCurrentColor] = useState('#000000');
   const [brushSize, setBrushSize] = useState(3);
   const [description, setDescription] = useState('');
   const [isEraserMode, setIsEraserMode] = useState(false);
   const scrollViewRef = useRef();
+  const viewShotRef = useRef();
 
   const stepInfo = getHtpStep(currentStep);
   const totalSteps = getTotalHtpSteps();
@@ -122,12 +125,12 @@ export default function HtpTestPage({ navigation }) {
   // 제출 가능 여부 확인 - 마지막 단계에서만 설명 필요
   const canSubmit = () => {
     const hasDrawingOrImage = allPaths.length > 0 || uploadedImage;
-    
+
     // 마지막 단계가 아니면 그림만 있으면 됨
     if (currentStep < totalSteps) {
       return hasDrawingOrImage;
     }
-    
+
     // 마지막 단계에서는 그림과 설명 모두 필요
     const hasDescription = description.trim().length > 0;
     return hasDrawingOrImage && hasDescription;
@@ -144,43 +147,113 @@ export default function HtpTestPage({ navigation }) {
       return;
     }
 
-    console.log(`HTP ${currentStep}단계 완료:`, { 
-      step: currentStep, 
+    console.log(`HTP ${currentStep}단계 완료:`, {
+      step: currentStep,
       object: stepInfo.object,
-      allPaths: allPaths.filter(p => p.step === currentStep), 
-      uploadedImage, 
+      allPaths: allPaths.filter(p => p.step === currentStep),
+      uploadedImage,
       description: currentStep === totalSteps ? description : '' // 마지막 단계에서만 설명 저장
     });
 
-    if (currentStep < totalSteps) {
-      // 다음 단계로 (그림은 유지, 설명은 초기화하지 않음 - 어차피 마지막에만 입력)
-      setCurrentStep(currentStep + 1);
-      setCurrentColor('#000000');
-      setBrushSize(3);
-      setIsEraserMode(false);
-    } else {
-      // HTP 검사 완료
-      console.log('HTP 전체 완료:', {
-        allPaths,
-        uploadedImage,
-        finalDescription: description
+    setCurrentStep(currentStep + 1);
+    setCurrentColor('#000000');
+    setBrushSize(3);
+    setIsEraserMode(false);
+
+    // if (currentStep < totalSteps) {
+    //   // 다음 단계로 (그림은 유지, 설명은 초기화하지 않음 - 어차피 마지막에만 입력)
+    //   setCurrentStep(currentStep + 1);
+    //   setCurrentColor('#000000');
+    //   setBrushSize(3);
+    //   setIsEraserMode(false);
+    // } 
+    // else {
+    //   // HTP 검사 완료
+    //   console.log('HTP 전체 완료:', {
+    //     allPaths,
+    //     uploadedImage,
+    //     finalDescription: description
+    //   });
+
+    //   Alert.alert(
+    //     'HTP 검사 완료',
+    //     '집, 나무, 사람이 모두 포함된 HTP 심리검사가 완료되었습니다!',
+    //     [
+    //       {
+    //         text: '확인',
+    //         onPress: () => navigation.navigate('Home')
+    //       }
+    //     ]
+    //   );
+    // }
+  };
+
+  const handleSubmit = async () => {
+    if (!canSubmit()) {
+      Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+      return;
+    }
+
+    try {
+      let imageUri = null;
+      let imageName = null;
+
+      if (allPaths.length > 0) {
+        // 직접 그린 그림(SVG 캡처)
+        imageUri = await viewShotRef.current.capture();
+        imageName = 'drawing.png'; // 저장할 파일명 지정
+      } else if (uploadedImage) {
+        // 앨범에서 업로드한 사진
+        imageUri = uploadedImage;
+        imageName = 'photo.jpg'; // 업로드용 임의 파일명
+      }
+
+      if (!imageUri) {
+        Alert.alert('오류', '이미지가 선택되지 않았습니다.');
+        return;
+      }
+
+      // FormData 생성
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imageUri,
+        name: imageName,
+        type: 'image/png', // 별도 포맷일 경우 변경
       });
-      
-      Alert.alert(
-        'HTP 검사 완료',
-        '집, 나무, 사람이 모두 포함된 HTP 심리검사가 완료되었습니다!',
-        [
-          {
-            text: '확인',
-            onPress: () => navigation.navigate('Home')
-          }
-        ]
-      );
+      formData.append('description', description);
+
+      const response = await fetch('http://34.63.32.189:8000/analyze/htp', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const result = await response.json();
+      if (result) {
+        console.log(result);
+        Alert.alert(
+          'HTP 검사 완료',
+          '집, 나무, 사람이 모두 포함된 HTP 심리검사가 완료되었습니다!',
+          [
+            {
+              text: '확인',
+              //onPress: () => navigation.navigate('Home')
+            }
+          ]
+        );
+      } else {
+        Alert.alert('실패', result.msg || '서버 오류');
+      }
+    } catch (e) {
+      Alert.alert('오류', '이미지 업로드에 실패했습니다.');
+      console.error(e);
     }
   };
 
   return (
-    <KeyboardAwareScrollView 
+    <KeyboardAwareScrollView
       style={styles.container}
       ref={scrollViewRef}
       contentContainerStyle={styles.contentContainer}
@@ -200,12 +273,12 @@ export default function HtpTestPage({ navigation }) {
         </Text>
         <Text style={styles.questionText}>{stepInfo.instruction}</Text>
         <Text style={styles.descriptionText}>{stepInfo.description}</Text>
-        
+
         {/* 진행 상황 표시 */}
         <View style={styles.progressContainer}>
           <Text style={styles.progressText}>
-            완료된 요소: {currentStep > 1 ? '집' : ''} 
-            {currentStep > 2 ? ', 나무' : ''} 
+            완료된 요소: {currentStep > 1 ? '집' : ''}
+            {currentStep > 2 ? ', 나무' : ''}
             {currentStep > 3 ? ', 사람' : ''}
           </Text>
         </View>
@@ -226,7 +299,7 @@ export default function HtpTestPage({ navigation }) {
               onPress={() => changeColor(color)}
             />
           ))}
-          
+
           <TouchableOpacity
             style={[styles.eraserButton, isEraserMode && styles.selectedEraser]}
             onPress={toggleEraserMode}
@@ -269,33 +342,35 @@ export default function HtpTestPage({ navigation }) {
       {/* SVG Canvas 영역 - 모든 이전 그림과 현재 그림 표시 */}
       <View style={styles.canvasContainer}>
         <View style={styles.svgContainer} {...panResponder.panHandlers}>
-          <Svg height="300" width="100%" style={styles.svg}>
-            {/* 모든 이전 단계의 그림들 렌더링 */}
-            {allPaths.map((pathObj, index) => (
-              <Path
-                key={index}
-                d={pathObj.path}
-                stroke={pathObj.color}
-                strokeWidth={pathObj.strokeWidth}
-                fill="transparent"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            ))}
-            {/* 현재 그리고 있는 경로 */}
-            {currentPath !== '' && (
-              <Path
-                d={currentPath}
-                stroke={isEraserMode ? '#FFFFFF' : currentColor}
-                strokeWidth={brushSize}
-                fill="transparent"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            )}
-          </Svg>
+          <ViewShot ref={viewShotRef} options={{ format: "png", quality: 1 }}>
+            <Svg height="300" width="100%" style={styles.svg}>
+              {/* 모든 이전 단계의 그림들 렌더링 */}
+              {allPaths.map((pathObj, index) => (
+                <Path
+                  key={index}
+                  d={pathObj.path}
+                  stroke={pathObj.color}
+                  strokeWidth={pathObj.strokeWidth}
+                  fill="transparent"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ))}
+              {/* 현재 그리고 있는 경로 */}
+              {currentPath !== '' && (
+                <Path
+                  d={currentPath}
+                  stroke={isEraserMode ? '#FFFFFF' : currentColor}
+                  strokeWidth={brushSize}
+                  fill="transparent"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+            </Svg>
+          </ViewShot>
         </View>
-        
+
         <View style={styles.canvasTools}>
           <TouchableOpacity style={styles.clearCurrentButton} onPress={clearCurrentStep}>
             <Text style={styles.clearButtonText}>현재 단계 지우기</Text>
@@ -350,7 +425,42 @@ export default function HtpTestPage({ navigation }) {
           <Text style={styles.uploadButtonText}>📷 사진 업로드</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {
+          currentStep < totalSteps ? (
+            <TouchableOpacity
+              style={[
+                styles.submitButton,
+                !canSubmit() && styles.disabledButton
+              ]}
+              onPress={handleNext}
+              disabled={!canSubmit()}
+            >
+              <Text style={[
+                styles.submitButtonText,
+                !canSubmit() && styles.disabledButtonText
+              ]}>
+                다음
+              </Text>
+            </TouchableOpacity>) : (
+            <TouchableOpacity
+              style={[
+                styles.submitButton,
+                !canSubmit() && styles.disabledButton
+              ]}
+              onPress={handleSubmit}
+              disabled={!canSubmit()}>
+              <Text style={[
+                styles.submitButtonText,
+                !canSubmit() && styles.disabledButtonText
+              ]}>
+                완료
+              </Text>
+            </TouchableOpacity>
+          )
+        }
+
+
+        {/* <TouchableOpacity
           style={[
             styles.submitButton,
             !canSubmit() && styles.disabledButton
@@ -364,7 +474,7 @@ export default function HtpTestPage({ navigation }) {
           ]}>
             {currentStep < totalSteps ? '다음' : '완료'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* 키보드 여백 확보를 위한 추가 공간 */}

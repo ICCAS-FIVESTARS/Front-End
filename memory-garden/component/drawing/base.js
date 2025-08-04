@@ -13,6 +13,10 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import * as ImagePicker from 'expo-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import ViewShot from "react-native-view-shot";
+import * as MediaLibrary from 'expo-media-library';
+
+
 import { getStageQuestion } from '../../utils/stageQuestion';
 import { getEncouragementMessage } from '../../utils/encouragementMessage';
 import { useUser } from '../../utils/user';
@@ -30,9 +34,10 @@ export default function DrawingPage({ route, navigation }) {
   const [brushSize, setBrushSize] = useState(3);
   const [description, setDescription] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [isEraserMode, setIsEraserMode] = useState(false); // 지우개 모드 상태
+  const [isEraserMode, setIsEraserMode] = useState(false);
   const scrollViewRef = useRef();
-  
+  const viewShotRef = useRef();
+
   const stageInfo = getStageQuestion(stage);
   const encouragementMsg = getEncouragementMessage(stage);
 
@@ -97,7 +102,7 @@ export default function DrawingPage({ route, navigation }) {
   // 앨범에서 사진 업로드
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (permissionResult.granted === false) {
       Alert.alert('권한 필요', '사진 라이브러리 접근 권한이 필요합니다.');
       return;
@@ -134,31 +139,127 @@ export default function DrawingPage({ route, navigation }) {
 
   //   // 그림 제출 처리
   //   console.log('그림 제출:', { stage, paths, uploadedImage, description });
-    
+
   //   // userInfo의 stage 값을 +1 증가
   //   updateUserInfo({ stage: userInfo.stage + 1 });
-    
+
   //   // 격려 모달 표시
   //   setModalVisible(true);
   // };
 
-  // 확인 버튼 - 그림 제출
-const handleSubmit = () => {
-  if (!canSubmit()) {
-    Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
-    return;
-  }
+  //확인 버튼 - 그림 제출
+  const handleSubmit = () => {
+    if (!canSubmit()) {
+      Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+      return;
+    }
 
-  // 그림 제출 처리
-  console.log('그림 제출:', { stage, paths, uploadedImage, description });
-  
-  // userInfo의 stage 값을 +1 증가
-  const newStage = userInfo.stage + 1;
-  updateUserInfo({ stage: newStage });
+    // 그림 제출 처리
+    console.log('그림 제출:', { stage, paths, uploadedImage, description });
 
-  // 격려 모달 표시
-  setModalVisible(true);
-};
+    // userInfo의 stage 값을 +1 증가
+    const newStage = userInfo.stage + 1;
+    updateUserInfo({ stage: newStage });
+
+    // 격려 모달 표시
+    setModalVisible(true);
+  };
+
+  // 핸드폰에 캡쳐해서 그림 저장 테스트
+  // const handleSubmit = async () => {
+  //   if (!canSubmit()) {
+  //     Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+  //     return;
+  //   }
+
+  //   try {
+  //     // 1. SVG 영역 캡처
+  //     const uri = await viewShotRef.current.capture();
+
+  //     // 2. 저장 권한 요청
+  //     const { status } = await MediaLibrary.requestPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       Alert.alert('권한 필요', '저장소 접근 권한이 필요합니다.');
+  //       return;
+  //     }
+
+  //     // 3. 갤러리(다운로드)에 저장
+  //     await MediaLibrary.saveToLibraryAsync(uri);
+
+  //     Alert.alert('완료', '이미지가 갤러리에 저장되었습니다!');
+
+  //     // userInfo의 stage 값을 +1 증가
+  //     const newStage = userInfo.stage + 1;
+  //     updateUserInfo({ stage: newStage });
+
+  //     // 격려 모달 표시
+  //     setModalVisible(true);
+
+  //   } catch (e) {
+  //     Alert.alert('오류', '이미지 저장에 실패했습니다.');
+  //     console.error(e);
+  //   }
+  // };
+
+//   const handleSubmit = async () => {
+//   if (!canSubmit()) {
+//     Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+//     return;
+//   }
+
+//   try {
+//     let imageUri = null;
+//     let imageName = null;
+
+//     if (paths.length > 0) {
+//       // 직접 그린 그림(SVG 캡처)
+//       imageUri = await viewShotRef.current.capture();
+//       imageName = 'drawing.png'; // 저장할 파일명 지정
+//     } else if (uploadedImage) {
+//       // 앨범에서 업로드한 사진
+//       imageUri = uploadedImage;
+//       imageName = 'photo.jpg'; // 업로드용 임의 파일명
+//     }
+
+//     if (!imageUri) {
+//       Alert.alert('오류', '이미지가 선택되지 않았습니다.');
+//       return;
+//     }
+
+//     // FormData 생성
+//     const formData = new FormData();
+//     formData.append('image', {
+//       uri: imageUri,
+//       name: imageName,
+//       type: 'image/png', // 별도 포맷일 경우 변경
+//     });
+//     formData.append('description', description);
+
+//     const response = await fetch('http://192.168.50.85:4000/upload', {
+//       method: 'POST',
+//       body: formData,
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
+
+//     const result = await response.json();
+//     if (result.success) {
+//       Alert.alert('성공', '제출이 완료되었습니다!');
+
+//       // userInfo의 stage 값을 +1 증가
+//       const newStage = userInfo.stage + 1;
+//       updateUserInfo({ stage: newStage });
+//       setModalVisible(true); // 기존 동작 유지
+//     } else {
+//       Alert.alert('실패', result.msg || '서버 오류');
+//     }
+//   } catch (e) {
+//     Alert.alert('오류', '이미지 업로드에 실패했습니다.');
+//     console.error(e);
+//   }
+// };
+
 
   // 모달 닫기 및 홈으로 이동
   const handleModalClose = () => {
@@ -196,7 +297,7 @@ const handleSubmit = () => {
             <TouchableOpacity
               key={color}
               style={[
-                styles.colorButton, 
+                styles.colorButton,
                 { backgroundColor: color },
                 currentColor === color && !isEraserMode && styles.selectedColor
               ]}
@@ -218,7 +319,7 @@ const handleSubmit = () => {
             )}
           </TouchableOpacity>
         </View>
-        
+
         <Text style={styles.toolLabel}>브러시 크기:</Text>
         <View style={styles.brushSizes}>
           {[1, 3, 5, 8, 12].map((size) => (
@@ -248,37 +349,39 @@ const handleSubmit = () => {
 
       {/* SVG Canvas 영역 */}
       <View style={styles.canvasContainer}>
-        <View 
+        <View
           style={styles.svgContainer}
           {...panResponder.panHandlers}
         >
-          <Svg height={300} width={width - 40} style={styles.svg}>
-            {/* 기존에 그린 경로들 */}
-            {paths.map((p, index) => (
-              <Path
-                key={index}
-                d={p.path}
-                stroke={p.color}
-                strokeWidth={p.strokeWidth}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            ))}
-            {/* 현재 그리고 있는 경로 */}
-            {currentPath !== '' && (
-              <Path
-                d={currentPath}
-                stroke={isEraserMode ? '#FFFFFF' : currentColor}
-                strokeWidth={brushSize}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            )}
-          </Svg>
+          <ViewShot ref={viewShotRef} options={{ format: "png", quality: 1 }}>
+            <Svg height={300} width={width - 40} style={styles.svg}>
+              {/* 기존에 그린 경로들 */}
+              {paths.map((p, index) => (
+                <Path
+                  key={index}
+                  d={p.path}
+                  stroke={p.color}
+                  strokeWidth={p.strokeWidth}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              ))}
+              {/* 현재 그리고 있는 경로 */}
+              {currentPath !== '' && (
+                <Path
+                  d={currentPath}
+                  stroke={isEraserMode ? '#FFFFFF' : currentColor}
+                  strokeWidth={brushSize}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              )}
+            </Svg>
+          </ViewShot>
         </View>
-        
+
         <View style={styles.canvasTools}>
           <TouchableOpacity style={styles.clearButton} onPress={clearCanvas}>
             <Text style={styles.clearButtonText}>지우기</Text>
@@ -312,8 +415,8 @@ const handleSubmit = () => {
         <View style={styles.imagePreview}>
           <Text style={styles.imagePreviewText}>업로드된 이미지</Text>
           <Image source={{ uri: uploadedImage }} style={styles.previewImage} />
-          <TouchableOpacity 
-            style={styles.removeImageButton} 
+          <TouchableOpacity
+            style={styles.removeImageButton}
             onPress={() => setUploadedImage(null)}
           >
             <Text style={styles.removeImageText}>이미지 제거</Text>
@@ -326,12 +429,12 @@ const handleSubmit = () => {
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadButtonText}>📷 사진 업로드</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={[
             styles.submitButton,
             !canSubmit() && styles.disabledButton
-          ]} 
+          ]}
           onPress={handleSubmit}
           disabled={!canSubmit()}
         >
@@ -342,7 +445,7 @@ const handleSubmit = () => {
         </TouchableOpacity>
       </View>
 
-      
+
 
       {/* 격려 메시지 모달 */}
       <MentModal

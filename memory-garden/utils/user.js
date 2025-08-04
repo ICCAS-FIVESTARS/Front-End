@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({
     id: 'user123',
     name: '정원지기',
-    stage: 11,
+    stage: 10,
     clearTime: 5,
     potion: 4,
     currentSetPotionUsed: 0,

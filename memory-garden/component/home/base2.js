@@ -8,8 +8,8 @@ import {
   Animated,
   Alert,
   ImageBackground,
-  Image
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useUser } from '../../utils/user';
 import CollectionModal from './collectionModal';
 import UserInfoModal from './userInfoModal';
@@ -37,6 +37,21 @@ const characterGifs = [
   require('../../assets/character/stage12.gif'),
 ];
 
+const potionGifs = [
+  require('../../assets/potion/stage1.gif'),
+  require('../../assets/potion/stage2.gif'),
+  require('../../assets/potion/stage3.gif'),
+  require('../../assets/potion/stage4.gif'),
+  require('../../assets/potion/stage5.gif'),
+  require('../../assets/potion/stage6.gif'),
+  require('../../assets/potion/stage7.gif'),
+  require('../../assets/potion/stage8.gif'),
+  require('../../assets/potion/stage9.gif'),
+  require('../../assets/potion/stage10.gif'),
+  require('../../assets/potion/stage11.gif'),
+  require('../../assets/potion/stage12.gif'),
+];
+
 const { width, height } = Dimensions.get('window');
 
 export default function HomePage({ navigation }) {
@@ -46,6 +61,7 @@ export default function HomePage({ navigation }) {
   const [collectionModalVisible, setCollectionModalVisible] = useState(false);
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [easterEggMessage, setEasterEggMessage] = useState('');
+  const [showPotionGif, setShowPotionGif] = useState(false);
 
   // 12개 전구의 고정 위치 (아치형 배경에 맞게 수동 조정)
   const lightPositions = [
@@ -101,8 +117,8 @@ export default function HomePage({ navigation }) {
     const centerX = width / 2;
     const centerY = height / 2;
     return {
-      x: centerX - 40,
-      y: centerY + 0
+      x: centerX - 50,
+      y: centerY - 50
     };
   };
 
@@ -165,9 +181,15 @@ export default function HomePage({ navigation }) {
   const handlePotionUse = () => {
     const result = usePotion();
     if (result.success) {
+      setShowPotionGif(true);
       const message = getRandomEasterEggMessage();
       setEasterEggMessage(message);
       setEasterEggVisible(true);
+
+      setTimeout(() => {
+        setShowPotionGif(false);
+      }, 2000);
+      
       Alert.alert(
         '포션 사용',
         `포션을 마셨습니다! (남은 포션: ${result.remainingPotion}개)\n현재 세트에서 사용한 포션: ${result.potionUsedInSet}/4개`
@@ -297,7 +319,11 @@ export default function HomePage({ navigation }) {
             <View style={styles.characterBox}>
               {/* <Text style={styles.characterText}>캐릭터</Text> */}
               <Image
-                source={characterGifs[userInfo.stage]}
+                source={
+                  showPotionGif
+                  ? potionGifs[userInfo.stage]
+                  : characterGifs[userInfo.stage]
+                }
                 style={[styles.characterImage]}
                 resizeMode="contain"
               />
@@ -444,20 +470,24 @@ const styles = StyleSheet.create({
   characterBox: {
     width: 80,
     height: 80,
-    backgroundColor: 'rgba(255, 182, 193, 0.9)',
-    borderRadius: 10,
+    //backgroundColor: 'rgba(255, 182, 193, 0.9)',
+    //borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#FF69B4',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    //borderWidth: 2,
+    //borderColor: '#FF69B4',
+    //shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    //shadowOpacity: 0.25,
+    //shadowRadius: 3.84,
+    //elevation: 5,
+  },
+  characterImage:{
+    width : 200,
+    height: 200
   },
   characterText: {
     fontSize: 14,
@@ -465,8 +495,8 @@ const styles = StyleSheet.create({
     color: '#8B008B',
   },
   potionButtonPosition: {
-    top: 120,
-    left: 0,
+    top: 150,
+    left: 20,
   },
   logoutButton: {
     position: 'absolute',
