@@ -15,7 +15,9 @@ import CollectionModal from './collectionModal';
 import UserInfoModal from './userInfoModal';
 import BlinkingPotionButton from './blinkingPotionButton';
 import EasterEggBubble from './easterEggBubble';
+import RollcallBubble from './rollcallBubble';
 import { getRandomEasterEggMessage } from '../../utils/easterEggMessages';
+import { getWelcomeMessage } from '../../utils/rollcallMessages';
 
 // 이미지 파일들 불러오기
 const backgroundImg = require('../../assets/home/backgroundImg.png');
@@ -62,6 +64,8 @@ export default function HomePage({ navigation }) {
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [easterEggMessage, setEasterEggMessage] = useState('');
   const [showPotionGif, setShowPotionGif] = useState(false);
+  const [rollcallVisible, setRollcallVisible] = useState(false);
+  const [rollcallMessage, setRollcallMessage] = useState('');
 
   // 12개 전구의 고정 위치 (아치형 배경에 맞게 수동 조정)
   const lightPositions = [
@@ -78,6 +82,14 @@ export default function HomePage({ navigation }) {
     { x: width * 0.90, y: height * 0.37 },  // 11번 전구 
     { x: width * 0.90, y: height * 0.45 },  // 12번 전구 
   ];
+
+  // 페이지 로드 시 출석 체크 실행
+  useEffect(() => {
+    // 페이지 진입 시 환영 메시지 표시
+    const welcomeMessage = getWelcomeMessage();
+    setRollcallMessage(welcomeMessage);
+    setRollcallVisible(true);
+  }, []);
 
   // 현재 스테이지 전구 깜빡임 애니메이션 - 수정된 부분
   useEffect(() => {
@@ -342,6 +354,13 @@ export default function HomePage({ navigation }) {
               visible={easterEggVisible}
               message={easterEggMessage}
               onComplete={() => setEasterEggVisible(false)}
+            />
+
+            {/* 출석체크 말풍선 */}
+            <RollcallBubble
+              visible={rollcallVisible}
+              message={rollcallMessage}
+              onComplete={() => setRollcallVisible(false)}
             />
           </View>
         </View>
