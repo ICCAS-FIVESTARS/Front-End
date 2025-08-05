@@ -103,7 +103,7 @@ export default function HtpTestPage({ navigation }) {
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      Alert.alert('권한 필요', '사진 라이브러리 접근 권한이 필요합니다.');
+      Alert.alert('Permission required', 'You need access to the photo library.');
       return;
     }
 
@@ -140,20 +140,20 @@ export default function HtpTestPage({ navigation }) {
   const handleNext = () => {
     if (!canSubmit()) {
       if (currentStep < totalSteps) {
-        Alert.alert('알림', '그림을 그리거나 사진을 업로드해주세요.');
+        Alert.alert('Alert', 'Please draw a picture or upload a picture.');
       } else {
-        Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+        Alert.alert('Alert', 'Please draw or upload the picture, and write a description.');
       }
       return;
     }
 
-    console.log(`HTP ${currentStep}단계 완료:`, {
-      step: currentStep,
-      object: stepInfo.object,
-      allPaths: allPaths.filter(p => p.step === currentStep),
-      uploadedImage,
-      description: currentStep === totalSteps ? description : '' // 마지막 단계에서만 설명 저장
-    });
+    // console.log(`HTP ${currentStep}단계 완료:`, {
+    //   step: currentStep,
+    //   object: stepInfo.object,
+    //   allPaths: allPaths.filter(p => p.step === currentStep),
+    //   uploadedImage,
+    //   description: currentStep === totalSteps ? description : '' // 마지막 단계에서만 설명 저장
+    // });
 
     setCurrentStep(currentStep + 1);
     setCurrentColor('#000000');
@@ -190,7 +190,7 @@ export default function HtpTestPage({ navigation }) {
 
   const handleSubmit = async () => {
     if (!canSubmit()) {
-      Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+      Alert.alert('Alert', 'Please draw or upload the picture, and write a description.');
       return;
     }
 
@@ -201,7 +201,7 @@ export default function HtpTestPage({ navigation }) {
       if (allPaths.length > 0) {
         // 직접 그린 그림(SVG 캡처)
         imageUri = await viewShotRef.current.capture();
-        imageName = 'drawing.png'; // 저장할 파일명 지정
+        imageName = 'drawing.jpg'; // 저장할 파일명 지정
       } else if (uploadedImage) {
         // 앨범에서 업로드한 사진
         imageUri = uploadedImage;
@@ -209,7 +209,7 @@ export default function HtpTestPage({ navigation }) {
       }
 
       if (!imageUri) {
-        Alert.alert('오류', '이미지가 선택되지 않았습니다.');
+        Alert.alert('Error', 'No image has been selected.');
         return;
       }
 
@@ -218,7 +218,7 @@ export default function HtpTestPage({ navigation }) {
       formData.append('image', {
         uri: imageUri,
         name: imageName,
-        type: 'image/png', // 별도 포맷일 경우 변경
+        type: 'image/jpg', // 별도 포맷일 경우 변경
       });
       formData.append('description', description);
 
@@ -234,20 +234,20 @@ export default function HtpTestPage({ navigation }) {
       if (result) {
         console.log(result);
         Alert.alert(
-          'HTP 검사 완료',
-          '집, 나무, 사람이 모두 포함된 HTP 심리검사가 완료되었습니다!',
+          'HTP Test Completed',
+          'The HTP Test that includes all houses, trees, and people is complete!',
           [
             {
-              text: '확인',
-              //onPress: () => navigation.navigate('Home')
+              text: 'Ok',
+              onPress: () => navigation.navigate('Home')
             }
           ]
         );
       } else {
-        Alert.alert('실패', result.msg || '서버 오류');
+        Alert.alert('faile', result.msg || 'Server Error');
       }
     } catch (e) {
-      Alert.alert('오류', '이미지 업로드에 실패했습니다.');
+      Alert.alert('Error', 'Image upload failed.');
       console.error(e);
     }
   };
@@ -269,7 +269,7 @@ export default function HtpTestPage({ navigation }) {
       {/* 상단 문구 */}
       <View style={styles.questionContainer}>
         <Text style={styles.stageNumber}>
-          HTP 검사 {currentStep}/{totalSteps}
+          HTP Test {currentStep}/{totalSteps}
         </Text>
         <Text style={styles.questionText}>{stepInfo.instruction}</Text>
         <Text style={styles.descriptionText}>{stepInfo.description}</Text>
@@ -277,16 +277,16 @@ export default function HtpTestPage({ navigation }) {
         {/* 진행 상황 표시 */}
         <View style={styles.progressContainer}>
           <Text style={styles.progressText}>
-            완료된 요소: {currentStep > 1 ? '집' : ''}
-            {currentStep > 2 ? ', 나무' : ''}
-            {currentStep > 3 ? ', 사람' : ''}
+            Completed Elements: {currentStep > 1 ? 'house' : ''}
+            {currentStep > 2 ? ', tree' : ''}
+            {currentStep > 3 ? ', people' : ''}
           </Text>
         </View>
       </View>
 
       {/* 그림 도구 */}
       <View style={styles.toolsContainer}>
-        <Text style={styles.toolLabel}>색상:</Text>
+        <Text style={styles.toolLabel}>Color:</Text>
         <View style={styles.colorPalette}>
           {['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'].map((color) => (
             <TouchableOpacity
@@ -311,7 +311,7 @@ export default function HtpTestPage({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.toolLabel}>브러시 크기:</Text>
+        <Text style={styles.toolLabel}>Brush Size:</Text>
         <View style={styles.brushSizes}>
           {[1, 3, 5, 8, 12].map((size) => (
             <TouchableOpacity
@@ -334,7 +334,7 @@ export default function HtpTestPage({ navigation }) {
 
         {isEraserMode && (
           <View style={styles.modeIndicator}>
-            <Text style={styles.modeText}>🧽 지우개 모드 (크기: {brushSize})</Text>
+            <Text style={styles.modeText}>🧽 Eraser Mode (Size: {brushSize})</Text>
           </View>
         )}
       </View>
@@ -342,7 +342,7 @@ export default function HtpTestPage({ navigation }) {
       {/* SVG Canvas 영역 - 모든 이전 그림과 현재 그림 표시 */}
       <View style={styles.canvasContainer}>
         <View style={styles.svgContainer} {...panResponder.panHandlers}>
-          <ViewShot ref={viewShotRef} options={{ format: "png", quality: 1 }}>
+          <ViewShot ref={viewShotRef} options={{ format: "jpg", quality: 1 }}>
             <Svg height="300" width="100%" style={styles.svg}>
               {/* 모든 이전 단계의 그림들 렌더링 */}
               {allPaths.map((pathObj, index) => (
@@ -373,10 +373,10 @@ export default function HtpTestPage({ navigation }) {
 
         <View style={styles.canvasTools}>
           <TouchableOpacity style={styles.clearCurrentButton} onPress={clearCurrentStep}>
-            <Text style={styles.clearButtonText}>현재 단계 지우기</Text>
+            <Text style={styles.clearButtonText}>Clear the current step</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.clearAllButton} onPress={clearAllCanvas}>
-            <Text style={styles.clearButtonText}>전체 지우기</Text>
+            <Text style={styles.clearButtonText}>Clear Full</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -385,14 +385,14 @@ export default function HtpTestPage({ navigation }) {
       {currentStep === totalSteps && (
         <View style={styles.descriptionContainer}>
           <Text style={styles.descriptionLabel}>
-            완성된 그림에 대한 설명을 적어주세요
+            Please write down the description of the completed picture
           </Text>
           <TextInput
             style={styles.descriptionInput}
             multiline
             value={description}
             onChangeText={setDescription}
-            placeholder="집, 나무, 사람이 모두 포함된 그림에 대해 자유롭게 설명해주세요..."
+            placeholder="Feel free to explain the picture you drew..."
             maxLength={500}
             onFocus={() => {
               setTimeout(() => {
@@ -408,13 +408,13 @@ export default function HtpTestPage({ navigation }) {
       {/* 업로드된 이미지 미리보기 */}
       {uploadedImage && (
         <View style={styles.imagePreview}>
-          <Text style={styles.imagePreviewText}>업로드된 이미지</Text>
+          <Text style={styles.imagePreviewText}>Uploaded Image</Text>
           <Image source={{ uri: uploadedImage }} style={styles.previewImage} />
           <TouchableOpacity
             style={styles.removeImageButton}
             onPress={() => setUploadedImage(null)}
           >
-            <Text style={styles.removeImageText}>이미지 제거</Text>
+            <Text style={styles.removeImageText}>Remove Image</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -422,7 +422,7 @@ export default function HtpTestPage({ navigation }) {
       {/* 하단 버튼들 */}
       <View style={styles.bottomButtons}>
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-          <Text style={styles.uploadButtonText}>📷 사진 업로드</Text>
+          <Text style={styles.uploadButtonText}>📷 Uploaded Image</Text>
         </TouchableOpacity>
 
         {
@@ -439,7 +439,7 @@ export default function HtpTestPage({ navigation }) {
                 styles.submitButtonText,
                 !canSubmit() && styles.disabledButtonText
               ]}>
-                다음
+                Next
               </Text>
             </TouchableOpacity>) : (
             <TouchableOpacity
@@ -453,7 +453,7 @@ export default function HtpTestPage({ navigation }) {
                 styles.submitButtonText,
                 !canSubmit() && styles.disabledButtonText
               ]}>
-                완료
+                Submit
               </Text>
             </TouchableOpacity>
           )

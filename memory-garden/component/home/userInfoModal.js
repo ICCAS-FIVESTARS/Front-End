@@ -17,35 +17,35 @@ export default function UserInfoModal({ visible, onClose, userInfo, hiddenItemCo
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>유저 정보</Text>
+          <Text style={styles.title}>User Info</Text>
 
           <View style={styles.infoRow}>
-            <Text style={styles.label}>이름:</Text>
+            <Text style={styles.label}>Name:</Text>
             <Text style={styles.value}>{userInfo.name}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.label}>현재 스테이지:</Text>
-            <Text style={styles.value}>{userInfo.stage+1}단계</Text>
+            <Text style={styles.label}>Current Stage:</Text>
+            <Text style={styles.value}>{userInfo.stage+1}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.label}>완주 횟수:</Text>
-            <Text style={styles.value}>{userInfo.clearTime}회</Text>
+            <Text style={styles.label}>Number of completions:</Text>
+            <Text style={styles.value}>{userInfo.clearTime}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.label}>포션 개수:</Text>
-            <Text style={styles.value}>{userInfo.potion}개</Text>
+            <Text style={styles.label}>Number of potions:</Text>
+            <Text style={styles.value}>{userInfo.potion}</Text>
           </View>
 
           <View style={styles.infoRow}>
-            <Text style={styles.label}>히든 아이템:</Text>
-            <Text style={styles.value}>{hiddenItemCount}/9개</Text>
+            <Text style={styles.label}>Hidden item:</Text>
+            <Text style={styles.value}>{hiddenItemCount}/9</Text>
           </View>
 
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>닫기</Text>
+            <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>

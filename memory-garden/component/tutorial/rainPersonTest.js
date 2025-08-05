@@ -83,7 +83,7 @@ export default function RainPersonTestPage({ navigation }) {
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      Alert.alert('권한 필요', '사진 라이브러리 접근 권한이 필요합니다.');
+      Alert.alert('Permission required', 'You need access to the photo library.');
       return;
     }
 
@@ -112,18 +112,18 @@ export default function RainPersonTestPage({ navigation }) {
   // 완료 처리
   const handleComplete = () => {
     if (!canSubmit()) {
-      Alert.alert('알림', '그림을 그리거나 사진을 업로드하고, 설명을 작성해주세요.');
+      Alert.alert('Alert', 'Please draw or upload the picture, and write a description.');
       return;
     }
 
-    console.log('빗속 사람 검사 완료:', { paths, uploadedImage, description });
+    //console.log('빗속 사람 검사 완료:', { paths, uploadedImage, description });
 
     Alert.alert(
-      '빗속 사람 검사 완료',
-      '빗속 사람 심리검사가 완료되었습니다!',
+      'DAPR Test Completed',
+      'DAPR Test is complete!',
       [
         {
-          text: '확인',
+          text: 'Ok',
           onPress: () => navigation.navigate('Home')
         }
       ]
@@ -146,16 +146,16 @@ export default function RainPersonTestPage({ navigation }) {
     >
       {/* 상단 문구 */}
       <View style={styles.questionContainer}>
-        <Text style={styles.stageNumber}>빗속 사람 심리검사</Text>
-        <Text style={styles.questionText}>비가 내리는 상황에서 사람을 그려주세요</Text>
+        <Text style={styles.stageNumber}>DAPR Test</Text>
+        <Text style={styles.questionText}>Draw a person when it's raining</Text>
         <Text style={styles.descriptionText}>
-          비가 내리는 상황에서 사람이 어떻게 행동하는지 자유롭게 표현해보세요
+          Feel free to express how a person behaves in a rainy situation
         </Text>
       </View>
 
       {/* 그림 도구 */}
       <View style={styles.toolsContainer}>
-        <Text style={styles.toolLabel}>색상:</Text>
+        <Text style={styles.toolLabel}>Color:</Text>
         <View style={styles.colorPalette}>
           {['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'].map((color) => (
             <TouchableOpacity
@@ -180,7 +180,7 @@ export default function RainPersonTestPage({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.toolLabel}>브러시 크기:</Text>
+        <Text style={styles.toolLabel}>Brush Size:</Text>
         <View style={styles.brushSizes}>
           {[1, 3, 5, 8, 12].map((size) => (
             <TouchableOpacity
@@ -203,7 +203,7 @@ export default function RainPersonTestPage({ navigation }) {
 
         {isEraserMode && (
           <View style={styles.modeIndicator}>
-            <Text style={styles.modeText}>🧽 지우개 모드 (크기: {brushSize})</Text>
+            <Text style={styles.modeText}>🧽 Eraser Mode (Size: {brushSize})</Text>
           </View>
         )}
       </View>
@@ -238,20 +238,20 @@ export default function RainPersonTestPage({ navigation }) {
         
         <View style={styles.canvasTools}>
           <TouchableOpacity style={styles.clearButton} onPress={clearCanvas}>
-            <Text style={styles.clearButtonText}>지우기</Text>
+            <Text style={styles.clearButtonText}>Clear</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       {/* 그림 설명 입력 칸 */}
       <View style={styles.descriptionContainer}>
-        <Text style={styles.descriptionLabel}>그림에 대한 설명을 적어주세요</Text>
+        <Text style={styles.descriptionLabel}>Please write down the description of the completed picture</Text>
         <TextInput
           style={styles.descriptionInput}
           multiline
           value={description}
           onChangeText={setDescription}
-          placeholder="그림에 대해 자유롭게 설명해주세요..."
+          placeholder="Feel free to explain the picture you drew..."
           maxLength={500}
           onFocus={() => {
             setTimeout(() => {
@@ -265,13 +265,13 @@ export default function RainPersonTestPage({ navigation }) {
       {/* 업로드된 이미지 미리보기 */}
       {uploadedImage && (
         <View style={styles.imagePreview}>
-          <Text style={styles.imagePreviewText}>업로드된 이미지</Text>
+          <Text style={styles.imagePreviewText}>Uploaded Image</Text>
           <Image source={{ uri: uploadedImage }} style={styles.previewImage} />
           <TouchableOpacity
             style={styles.removeImageButton}
             onPress={() => setUploadedImage(null)}
           >
-            <Text style={styles.removeImageText}>이미지 제거</Text>
+            <Text style={styles.removeImageText}>Remove Image</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -279,7 +279,7 @@ export default function RainPersonTestPage({ navigation }) {
       {/* 하단 버튼들 */}
       <View style={styles.bottomButtons}>
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-          <Text style={styles.uploadButtonText}>📷 사진 업로드</Text>
+          <Text style={styles.uploadButtonText}>📷 Uploaded Image</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -294,7 +294,7 @@ export default function RainPersonTestPage({ navigation }) {
             styles.submitButtonText,
             !canSubmit() && styles.disabledButtonText
           ]}>
-            완료
+            Submit
           </Text>
         </TouchableOpacity>
       </View>

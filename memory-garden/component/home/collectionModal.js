@@ -5,8 +5,8 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
-  Image
 } from 'react-native';
+import { Image } from 'expo-image';
 
 export default function CollectionModal({ visible, onClose, hiddenItemList }) {
   const renderHiddenItem = (hasItem, index) => {
@@ -80,7 +80,7 @@ export default function CollectionModal({ visible, onClose, hiddenItemList }) {
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
-          <Text style={styles.title}>히든 아이템 도감</Text>
+          <Text style={styles.title}>Hidden item drawing book</Text>
 
           <View style={styles.collectionGrid}>
             {renderRow(0)}
@@ -90,12 +90,12 @@ export default function CollectionModal({ visible, onClose, hiddenItemList }) {
 
           <View style={styles.progressContainer}>
             <Text style={styles.progressText}>
-              수집 진행률: {hiddenItemList.filter(item => item === 1).length}/6
+              Collection progress: {hiddenItemList.filter(item => item === 1).length}/6
             </Text>
           </View>
 
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>닫기</Text>
+            <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>

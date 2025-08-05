@@ -27,8 +27,8 @@ export default function TutorialPage({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>심리 검사 선택</Text>
-        <Text style={styles.subtitle}>1, 2번 버튼 중 하나를 선택하세요!</Text>
+        <Text style={styles.title}>Select Tutorial</Text>
+        <Text style={styles.subtitle}>Choose between buttons 1 and 2!</Text>
       </View>
 
       <View style={styles.buttonContainer}>

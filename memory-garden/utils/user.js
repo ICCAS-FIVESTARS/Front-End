@@ -13,19 +13,28 @@ export const useUser = () => {
 export const UserProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({
     id: 'user123',
-    name: '정원지기',
-    stage: 10,
+    name: 'gardener',
+    stage: 0,
     clearTime: 5,
     potion: 4,
     currentSetPotionUsed: 0,
     hidden_item_list: [1, 0, 1, 1, 0, 0,],
-    isFirstLogin: false // 첫 로그인 체크 변수 추가
+    isFirstLogin: true, // 첫 로그인 체크 변수
+    emotion: [
+      { value: 10, label: 'Anger', color: '#E53935' }, 
+      { value: 20, label: 'Disgust', color: '#7CB342' },      
+      { value: 50, label: 'Fear', color: '#8E24AA' },     
+      { value: 90, label: 'Happiness', color: '#FFEB3B' },  
+      { value: 30, label: 'Sadness', color: '#42A5F5' },      
+      { value: 40, label: 'Surprise', color: '#FFA726' },  
+    ],
+    drawingSubmitted: false,
   });
 
   const updateUserInfo = useCallback((newInfo) => {
     setUserInfo(prev => {
       const updated = { ...prev, ...newInfo };
-      console.log('UserInfo 업데이트:', updated);
+      //console.log('UserInfo 업데이트:', updated);
       return updated;
     });
   }, []);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,17 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useUser } from '../../utils/user';
+import { useIsFocused } from '@react-navigation/native';
+import { Audio } from 'expo-av';
+
+import ResultModal from './resultModal';
 import CollectionModal from './collectionModal';
 import UserInfoModal from './userInfoModal';
 import BlinkingPotionButton from './blinkingPotionButton';
 import EasterEggBubble from './easterEggBubble';
+import RollcallBubble from './rollcallBubble';
 import { getRandomEasterEggMessage } from '../../utils/easterEggMessages';
+import { getWelcomeMessage } from '../../utils/rollcallMessages';
 
 // 이미지 파일들 불러오기
 const backgroundImg = require('../../assets/home/backgroundImg.png');
@@ -52,6 +58,11 @@ const potionGifs = [
   require('../../assets/potion/stage12.gif'),
 ];
 
+const cheeringGifs = [
+  require('../../assets/cheering/left.gif'),
+  require('../../assets/cheering/right.gif'),
+];
+
 const { width, height } = Dimensions.get('window');
 
 export default function HomePage({ navigation }) {
@@ -59,9 +70,20 @@ export default function HomePage({ navigation }) {
   const { userInfo, updateUserInfo, getHiddenItemCount, usePotion, unlockRandomHiddenItem, completeSet } = useUser();
   const [userModalVisible, setUserModalVisible] = useState(false);
   const [collectionModalVisible, setCollectionModalVisible] = useState(false);
+  const [resultModalVisible, setResultModalVisible] = useState(false);
+
+  const [drawingSubmitted, setShowSubmissionGif] = useState(false);
+
   const [easterEggVisible, setEasterEggVisible] = useState(false);
   const [easterEggMessage, setEasterEggMessage] = useState('');
+
   const [showPotionGif, setShowPotionGif] = useState(false);
+
+  const [rollcallVisible, setRollcallVisible] = useState(false);
+  const [rollcallMessage, setRollcallMessage] = useState('');
+
+  const isFocused = useIsFocused();
+  const soundRef = useRef(null);
 
   // 12개 전구의 고정 위치 (아치형 배경에 맞게 수동 조정)
   const lightPositions = [
@@ -78,6 +100,14 @@ export default function HomePage({ navigation }) {
     { x: width * 0.90, y: height * 0.37 },  // 11번 전구 
     { x: width * 0.90, y: height * 0.45 },  // 12번 전구 
   ];
+
+  // 페이지 로드 시 출석 체크 실행
+  useEffect(() => {
+    // 페이지 진입 시 환영 메시지 표시
+    const welcomeMessage = getWelcomeMessage();
+    setRollcallMessage(welcomeMessage);
+    setRollcallVisible(true);
+  }, []);
 
   // 현재 스테이지 전구 깜빡임 애니메이션 - 수정된 부분
   useEffect(() => {
@@ -110,7 +140,45 @@ export default function HomePage({ navigation }) {
     }
   }, [userInfo.stage]);
 
+  // 스테이지 클리어시 응원
+  useEffect(() => {
+    if (userInfo.drawingSubmitted) {
+      setShowSubmissionGif(true); // 3초 표시
+      const timer = setTimeout(() => {
+        setShowSubmissionGif(false);
+        updateUserInfo({ ...userInfo, drawingSubmitted: false }); // 또는 별도 함수로 플래그 초기화
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [userInfo.drawingSubmitted]);
 
+  // 배경음악
+  useEffect(() => {
+    let sound = null;
+    // 포커스 됐을 때만 음악 재생
+    if (isFocused) {
+      Audio.Sound.createAsync(require('../../assets/music/longnight.mp3'), { shouldPlay: true, isLooping: true })
+        .then(({ sound: playback }) => {
+          soundRef.current = playback;
+          playback.playAsync();
+        });
+    } else {
+      // 포커스가 해제(or 다른 페이지 이동)되면 음악 정지 및 자원 해제
+      if (soundRef.current) {
+        soundRef.current.stopAsync();
+        soundRef.current.unloadAsync();
+        soundRef.current = null;
+      }
+    }
+    // 언마운트 시에도 정리
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.stopAsync();
+        soundRef.current.unloadAsync();
+        soundRef.current = null;
+      }
+    }
+  }, [isFocused]);
 
   // 캐릭터 위치 (아치형 길 위)
   const getCharacterPosition = () => {
@@ -149,9 +217,9 @@ export default function HomePage({ navigation }) {
     if (status === 'current') {
       navigation.navigate('Drawing', { stage: stageIndex + 1 });
     } else if (status === 'completed') {
-      Alert.alert('알림', `클리어한 스테이지 입니다.`);
+      Alert.alert('Alert', `It's a stage that I cleared.`);
     } else {
-      Alert.alert('알림', '아직 잠긴 스테이지입니다.');
+      Alert.alert('Alert', 'It is still a locked stage.');
     }
   };
 
@@ -162,17 +230,17 @@ export default function HomePage({ navigation }) {
         const unlocked = unlockRandomHiddenItem();
         if (unlocked) {
           Alert.alert(
-            '🎉 이스터에그 발견!',
-            '포션의 마법으로 숨겨진 아이템을 발견했습니다!',
-            [{ text: '확인' }]
+            '🎉 Easter Egg Discovery!',
+            'Found an item hidden by the magic of the potion!',
+            [{ text: 'Ok' }]
           );
         }
       }
       completeSet();
       Alert.alert(
-        '축하합니다!',
-        '1세트를 완료하셨습니다! 새로운 여정이 시작됩니다.',
-        [{ text: '확인' }]
+        'Congratulations!',
+        'You have completed the one set! \nA new journey begins.',
+        [{ text: 'Ok', onPress: () => navigation.replace('Tutorial') }]
       );
     }
   };
@@ -189,13 +257,13 @@ export default function HomePage({ navigation }) {
       setTimeout(() => {
         setShowPotionGif(false);
       }, 2000);
-      
+
       Alert.alert(
-        '포션 사용',
-        `포션을 마셨습니다! (남은 포션: ${result.remainingPotion}개)\n현재 세트에서 사용한 포션: ${result.potionUsedInSet}/4개`
+        'Using Potion',
+        `I drank potion! (Remaining Potion: ${result.remainingPotion})\nPotion used in the current set: ${result.potionUsedInSet}/4`
       );
     } else {
-      Alert.alert('알림', '포션이 부족합니다!');
+      Alert.alert('Alert', '포션이 부족합니다!');
     }
   };
 
@@ -233,6 +301,13 @@ export default function HomePage({ navigation }) {
             >
               <Text style={styles.buttonText}>📚</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.circleButton}
+              onPress={() => setResultModalVisible(true)}
+            >
+              <Text style={styles.buttonText}>📝</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -249,6 +324,12 @@ export default function HomePage({ navigation }) {
           visible={collectionModalVisible}
           onClose={() => setCollectionModalVisible(false)}
           hiddenItemList={userInfo.hidden_item_list}
+        />
+
+        <ResultModal
+          visible={resultModalVisible}
+          onClose={() => setResultModalVisible(false)}
+          emotion={userInfo.emotion}
         />
 
         {/* 정원 영역 */}
@@ -321,8 +402,8 @@ export default function HomePage({ navigation }) {
               <Image
                 source={
                   showPotionGif
-                  ? potionGifs[userInfo.stage]
-                  : characterGifs[userInfo.stage]
+                    ? potionGifs[userInfo.stage]
+                    : characterGifs[userInfo.stage]
                 }
                 style={[styles.characterImage]}
                 resizeMode="contain"
@@ -343,12 +424,49 @@ export default function HomePage({ navigation }) {
               message={easterEggMessage}
               onComplete={() => setEasterEggVisible(false)}
             />
+
+            {/* 출석체크 말풍선 */}
+            <RollcallBubble
+              visible={rollcallVisible}
+              message={rollcallMessage}
+              onComplete={() => setRollcallVisible(false)}
+            />
           </View>
         </View>
 
+        {/* 응원 */}
+        {drawingSubmitted && (
+          <>
+            <View style={{
+              position: 'absolute',
+              left: characterPos.x - 220, // 캐릭터의 왼쪽, 캐릭터 width+여유 고려
+              top: characterPos.y + 20,
+              zIndex: 10
+            }}>
+              <Image
+                source={cheeringGifs[0]}
+                style={{ width: 300, height: 300 }}
+                resizeMode="contain"
+              />
+            </View>
+            <View style={{
+              position: 'absolute',
+              left: characterPos.x + 20, // 캐릭터의 오른쪽
+              top: characterPos.y + 20,
+              zIndex: 10
+            }}>
+              <Image
+                source={cheeringGifs[1]}
+                style={{ width: 300, height: 300 }}
+                resizeMode="contain"
+              />
+            </View>
+          </>
+        )}
+
         {/* 임시 로그아웃 버튼 */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>로그아웃</Text>
+          <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -485,8 +603,8 @@ const styles = StyleSheet.create({
     //shadowRadius: 3.84,
     //elevation: 5,
   },
-  characterImage:{
-    width : 200,
+  characterImage: {
+    width: 200,
     height: 200
   },
   characterText: {

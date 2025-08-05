@@ -1,63 +1,63 @@
 export const ENCOURAGEMENT_MESSAGES = [
   {
     stage: 1,
-    message: "첫 번째 단계를 완료하셨네요! 색깔로 표현한 당신의 감정이 아름답습니다. 🎨",
-    subMessage: "감정을 표현하는 것은 용기가 필요한 일이에요. 잘하고 계십니다!"
+    message: "You have completed the first step! Your emotions expressed in colors are beautiful. 🎨",
+    subMessage: "Expressing your feelings takes courage. You're doing great!"
   },
   {
     stage: 2,
-    message: "안전한 공간을 그려주셨군요! 마음의 평안을 찾는 것이 중요해요. 🏡",
-    subMessage: "당신만의 특별한 공간을 만들어가고 있어요."
+    message: "You drew a safe space! It is important to find peace of mind. 🏡",
+    subMessage: "You're creating your own special space."
   },
   {
     stage: 3,
-    message: "구름과 화살표가 포함된 멋진 작품이에요! 창의력이 돋보입니다. ☁️➡️",
-    subMessage: "상상력을 발휘해서 표현해주셔서 감사해요."
+    message: "It's a wonderful piece with clouds and arrows! Creativity stands out. ☁️➡️",
+    subMessage: "Thank you for using your imagination to express it."
   },
   {
     stage: 4,
-    message: "자연의 아름다움을 담아내셨네요! 나무와 집이 조화롭습니다. 🌳🏠",
-    subMessage: "자연과 함께하는 마음이 느껴져요."
+    message: "You captured the beauty of nature! The trees and houses are in harmony. 🌳🏠",
+    subMessage: "I can feel the feeling of being with nature."
   },
   {
     stage: 5,
-    message: "가족에 대한 따뜻한 마음이 전해집니다! 소중한 사람들이군요. 👨‍👩‍👧‍👦",
-    subMessage: "사랑하는 마음을 표현해주셔서 고마워요."
+    message: "My warm heart goes out for my family! What a precious people. 👨👩👧👦",
+    subMessage: "Thank you for expressing your love."
   },
   {
     stage: 6,
-    message: "원 안에 담긴 감정이 진솔하게 느껴져요! 솔직한 표현이 아름답습니다. ⭕",
-    subMessage: "내면의 감정을 들여다보는 용기가 대단해요."
+    message: "The feelings in the circle are sincere! Your honest expression is beautiful. ⭕",
+    subMessage: "You have great courage to look into your inner feelings."
   },
   {
     stage: 7,
-    message: "비 오는 날의 풍경이 감성적이에요! 날씨와 감정이 잘 어우러졌네요. 🌧️",
-    subMessage: "모든 날씨에는 나름의 아름다움이 있어요."
+    message: "The scenery on a rainy day is emotional! The weather and emotions mix well. 🌧️",
+    subMessage: "Every weather has its own beauty."
   },
   {
     stage: 8,
-    message: "꽃과 나비가 춤추는 정원이 환상적이에요! 생명력이 넘쳐나네요. 🌸🦋",
-    subMessage: "아름다운 자연을 표현해주셔서 마음이 따뜻해져요."
+    message: "The garden where flowers and butterflies dance is fantastic! It is full of life. 🌸🦋",
+    subMessage: "It warms my heart because you express beautiful nature."
   },
   {
     stage: 9,
-    message: "별빛이 가득한 밤하늘이 신비로워요! 꿈과 희망이 보입니다. ✨🌙",
-    subMessage: "어둠 속에서도 빛을 찾는 마음이 아름다워요."
+    message: "The night sky is mysterious! I can see dreams and hopes. ✨🌙",
+    subMessage: "It's beautiful to find the light even in the dark."
   },
   {
     stage: 10,
-    message: "바다와 물고기들이 자유롭게 헤엄치는 모습이 평화로워요! 🌊🐠",
-    subMessage: "자유로운 영혼이 느껴져요."
+    message: "The sea and the fish swimming freely are peaceful! 🌊🐠",
+    subMessage: "I feel a free spirit."
   },
   {
     stage: 11,
-    message: "산과 태양이 어우러진 풍경이 웅장해요! 새로운 시작을 알리는 듯해요. ⛰️☀️",
-    subMessage: "희망찬 미래를 향한 의지가 보여요."
+    message: "The scenery of the mountain and the sun is magnificent! It seems to mark a new beginning. ⛰️☀️",
+    subMessage: "I can see the will toward a hopeful future."
   },
   {
     stage: 12,
-    message: "꿈을 그려내신 모습이 정말 감동적이에요! 모든 여정을 완주하셨습니다! 🎉✨",
-    subMessage: "12단계 모든 과정을 완료하신 것을 축하드려요. 당신은 정말 대단한 사람이에요!"
+    message: "It's so touching how you drew your dream! You've completed the whole journey! 🎉✨",
+    subMessage: "Congratulations on completing the entire 12-step course. You are such an amazing person!"
   }
 ];
 

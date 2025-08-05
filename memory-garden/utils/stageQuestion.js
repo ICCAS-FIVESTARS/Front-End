@@ -1,63 +1,63 @@
 export const STAGE_QUESTIONS = [
   {
     stage: 1,
-    question: "지금의 나를 표현하고, ‘구름’을 그려보세요",
-    description: "현재의 감정을 구름으로 표현해보세요"
+    question: "Express your current self by drawing 3 clouds.",
+    description: "Use different facial expressions, colors, and shapes to show your current feelings. It doesn’t have to be perfect—what you feel now is enough."
   },
   {
     stage: 2,
-    question: "현재 기분을 ‘태양’과 ‘구름’으로 표현해보세요",
-    description: "따뜻함, 답답함 등 감정을 날씨의 이미지로 표현해보세요 "
+    question: "Show your day’s emotions with 1 sun and 2 clouds.",
+    description: "Express how your mood changed from morning to night using nature. If emotions are unclear, just use colors to represent them."
   },
   {
     stage: 3,
-    question: "당신을 ‘나무’에 비유해서 표현해보세요",
-    description: "뿌리, 가지, 잎 등을 통해 나의 내면과 성격을 표현해보세요"
+    question: "Draw a tree with 1 root, 3 branches, and 3 leaves.",
+    description: "The root reflects your thoughts, the branches your strengths, and the leaves your emotions. You can use colors or objects instead of words."
   },
   {
     stage: 4,
-    question: "하루의 일상을 ‘길’을 따라 그려보세요",
-    description: "아침부터 저녁까지의 나의 하루를 길 위의 장면으로 표현해보세요"
+    question: "Divide the day into 3 paths and express your feelings on each one.",
+    description: "Draw morning, afternoon, and evening paths. Use colors or symbols to reflect how you felt. Curvy or straight, it’s still your day."
   },
   {
     stage: 5,
-    question: "현재 기분을 ‘열매’를 통해 표현해보세요",
-    description: "슬픔, 기쁨, 분노 등의 감정을 열매의 색과 모양으로 시각화해보세요"
+    question: "Express joy, anger, anxiety, and sadness using 4 fruits.",
+    description: "Draw each fruit to reflect a feeling. If it's hard to label them, just use similar colors or shapes—it’s okay."
   },
   {
     stage: 6,
-    question: "나에게 소중한 사람들과 있는 장면을 그려보세요",
-    description: "가족이나 친구들과 함께 있는 모습을 통해 관계의 의미를 표현해보세요"
+    question: "Draw things connected to you to show your relationships.",
+    description: "Not only people—pets, objects, or memories are all welcome. Think of what feels close to you."
   },
   {
     stage: 7,
-    question: "마음을 편안하게 하는 ‘꽃 정원’을 꾸며보세요",
-    description: "좋아하는 꽃과 잔디로 채워진 공간을 상상하고 꾸며보세요"
+    question: "Draw 5 flowers, each with a comforting message.",
+    description: "You may write healing words, or just use gentle shapes and colors. Create your own garden of comfort."
   },
   {
     stage: 8,
-    question: "기억 속 특별했던 순간을 ‘별’과 함께 그려보세요",
-    description: "반짝였던 순간을 별과 함께 표현해보세요"
+    question: "ExperiencesDraw 3 stars for meaningful memories, and name one of them.",
+    description: "Even if the memory is vague, it’s okay. A feeling or color is enough—the act of remembering matters most."
   },
   {
     stage: 9,
-    question: "내가 꿈꾸는 미래의 공간을 상상해 그려보세요",
-    description: "밝고 희망찬 공간을 집, 구름, 태양, 나무 등으로 구성해보세요"
+    question: "Draw a space you’d like to live in, with a cloud, sun, and tree included.",
+    description: "It’s fine if the future feels unclear. Just imagine a warm, peaceful scene. Expressing even one element is already enough."
   },
   {
     stage: 10,
-    question: "과거-현재-미래의 나를 ‘길 위의 인물’로 표현해보세요",
-    description: "시간의 흐름에 따라 나의 변화된 모습을 길 위에 순서대로 표현해보세요"
+    question: "Draw one big tree that holds your feelings, memories, and beliefs.",
+    description: "Combine what you’ve expressed so far. Any form is okay—this is your whole self coming together."
   },
   {
     stage: 11,
-    question: "내가 살고 싶은 마을을 그려보세요",
-    description: "사람들과 어울려 사는 모습을 상상하며 마을을 구성해보세요"
+    question: "Show 3 future roles using symbolic objects.",
+    description: "Think of items like books, microphones, or brushes to represent what you want. Even a vague image is perfectly fine."
   },
   {
     stage: 12,
-    question: "지난 여정을 담은 ‘별’과 ‘꽃’이 있는 포스터를 완성해보세요",
-    description: "나의 변화와 성장을 상징하는 요소들을 사용해 나만의 이야기를 구성해보세요 "
+    question: "Place your first and latest drawings side by side and write 3 things that changed.",
+    description: "Small changes matter. Look at color, position, or size. Just redrawing yourself is already a sign of growth."
   }
 ];
 

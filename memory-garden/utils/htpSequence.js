@@ -1,21 +1,21 @@
 export const HTP_SEQUENCE = [
   {
     id: 1,
-    object: '집',
-    instruction: '집을 그려주세요',
-    description: '어떤 집이든 상관없습니다. 자유롭게 그려보세요.'
+    object: 'house',
+    instruction: 'Please draw a house',
+    description: 'It doesn not matter what house it is. Feel free to draw.'
   },
   {
     id: 2,
-    object: '나무',
-    instruction: '나무를 그려주세요',
-    description: '집 옆에 나무를 그려보세요. 어떤 나무든 상관없습니다.'
+    object: 'tree',
+    instruction: 'Please draw a tree',
+    description: 'Draw a tree next to your house. It doesn not matter what kind of tree it is.'
   },
   {
     id: 3,
-    object: '사람',
-    instruction: '사람을 그려주세요',
-    description: '집과 나무가 있는 곳에 사람을 그려보세요. 어떤 사람이든 상관없습니다.'
+    object: 'people',
+    instruction: 'Please draw a person',
+    description: 'Draw a person where there are houses and trees. It doesn not matter who it is.'
   },
 ];
 

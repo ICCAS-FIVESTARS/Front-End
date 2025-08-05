@@ -24,12 +24,12 @@ export default function MentModal({ visible, onClose, message, subMessage }) {
             <Text style={styles.celebrationIcon}>🎉</Text>
           </View>
           
-          <Text style={styles.title}>완료!</Text>
+          <Text style={styles.title}>complete!</Text>
           <Text style={styles.message}>{message}</Text>
           <Text style={styles.subMessage}>{subMessage}</Text>
           
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>다음 단계로</Text>
+            <Text style={styles.closeButtonText}>To the next step</Text>
           </TouchableOpacity>
         </View>
       </View>

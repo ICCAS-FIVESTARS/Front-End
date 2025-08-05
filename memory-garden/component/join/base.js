@@ -18,7 +18,7 @@ export default function SignupBase({ navigation }) {
   // ID 중복 확인 함수
   const checkIdDuplicate = () => {
     if (!id.trim()) {
-      Alert.alert('알림', 'ID를 입력해주세요.');
+      Alert.alert('Alert', 'Please enter your ID.');
       return;
     }
 
@@ -28,11 +28,11 @@ export default function SignupBase({ navigation }) {
     if (usedIds.includes(id.toLowerCase())) {
       setIsIdAvailable(false);
       setIsIdChecked(true);
-      Alert.alert('중복 확인', '이미 사용 중인 ID입니다.');
+      Alert.alert('Check redundancy', 'This ID is already in use.');
     } else {
       setIsIdAvailable(true);
       setIsIdChecked(true);
-      Alert.alert('중복 확인', '사용 가능한 ID입니다.');
+      Alert.alert('Check redundancy', 'This is a valid ID.');
     }
   };
 
@@ -46,37 +46,37 @@ export default function SignupBase({ navigation }) {
   // 회원가입 처리 함수
   const handleSignup = () => {
     if (!id.trim()) {
-      Alert.alert('알림', 'ID를 입력해주세요.');
+      Alert.alert('Alert', 'Please enter your ID.');
       return;
     }
 
     if (!isIdChecked) {
-      Alert.alert('알림', 'ID 중복 확인을 해주세요.');
+      Alert.alert('Alert', 'Please double-check your ID.');
       return;
     }
 
     if (!isIdAvailable) {
-      Alert.alert('알림', '사용 가능한 ID로 변경해주세요.');
+      Alert.alert('Alert', 'Please change it to an available ID.');
       return;
     }
 
     if (!password.trim()) {
-      Alert.alert('알림', '비밀번호를 입력해주세요.');
+      Alert.alert('Alert', 'Please enter your password.');
       return;
     }
 
     if (password.length < 4) {
-      Alert.alert('알림', '비밀번호는 4자리 이상 입력해주세요.');
+      Alert.alert('Alert', 'Please enter a password of at least 4 digits.');
       return;
     }
 
     // 회원가입 성공
     Alert.alert(
-      '회원가입 완료',
-      '회원가입이 완료되었습니다!',
+      'Membership registration completed',
+      'Your membership has been registered!',
       [
         {
-          text: '확인',
+          text: 'Ok',
           onPress: () => navigation.goBack()
         }
       ]
@@ -92,15 +92,15 @@ export default function SignupBase({ navigation }) {
       extraScrollHeight={50}
       extraHeight={100}
     >
-      <Text style={styles.title}>회원가입</Text>
+      <Text style={styles.title}>Join</Text>
 
       {/* ID 입력 영역 */}
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>아이디</Text>
+        <Text style={styles.label}>ID</Text>
         <View style={styles.idInputRow}>
           <TextInput
             style={[styles.input, styles.idInput]}
-            placeholder="아이디를 입력하세요"
+            placeholder="Please enter your ID"
             value={id}
             onChangeText={handleIdChange}
             autoCapitalize="none"
@@ -109,7 +109,7 @@ export default function SignupBase({ navigation }) {
             style={styles.checkButton}
             onPress={checkIdDuplicate}
           >
-            <Text style={styles.checkButtonText}>중복확인</Text>
+            <Text style={styles.checkButtonText}>Check redundancy</Text>
           </TouchableOpacity>
         </View>
 
@@ -118,17 +118,17 @@ export default function SignupBase({ navigation }) {
             styles.checkResult,
             isIdAvailable ? styles.available : styles.unavailable
           ]}>
-            {isIdAvailable ? '✓ 사용 가능한 ID입니다' : '✗ 이미 사용 중인 ID입니다'}
+            {isIdAvailable ? '✓ This is an available ID' : '✗ ID already in use'}
           </Text>
         )}
       </View>
 
       {/* 비밀번호 입력 영역 */}
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>비밀번호</Text>
+        <Text style={styles.label}>Password</Text>
         <TextInput
           style={styles.input}
-          placeholder="비밀번호를 입력하세요"
+          placeholder="Please enter your password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -137,7 +137,7 @@ export default function SignupBase({ navigation }) {
 
       {/* 회원가입 버튼 */}
       <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
-        <Text style={styles.signupButtonText}>회원가입</Text>
+        <Text style={styles.signupButtonText}>Join</Text>
       </TouchableOpacity>
 
       {/* 로그인 페이지로 이동 */}
@@ -146,7 +146,7 @@ export default function SignupBase({ navigation }) {
         onPress={() => navigation.goBack()}
       >
         <Text style={styles.loginLinkText}>
-          이미 계정이 있으신가요? 로그인하기
+          Do you already have an account? Login
         </Text>
       </TouchableOpacity>
     </KeyboardAwareScrollView>

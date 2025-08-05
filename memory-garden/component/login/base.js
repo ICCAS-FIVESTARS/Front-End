@@ -34,7 +34,7 @@ export default function LoginBase({ navigation }) {
         navigation.replace('Home');
       }
     } else {
-      Alert.alert('로그인 실패', '아이디와 비밀번호를 확인해주세요.');
+      Alert.alert('Login failed', 'Please check your ID and password.');
     }
   };
 
@@ -63,14 +63,14 @@ export default function LoginBase({ navigation }) {
 
         <TextInput
           style={styles.input}
-          placeholder="아이디"
+          placeholder="ID"
           value={id}
           onChangeText={setId}
         />
 
         <TextInput
           style={styles.input}
-          placeholder="비밀번호"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
